@@ -125,13 +125,15 @@ public class MediaTranscoderEngine {
             }
         }
     }
-
+    
+    private int angle = 0;
     private void setupMetadata() throws IOException {
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
         mediaMetadataRetriever.setDataSource(mInputFileDescriptor);
 
         String rotationString = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
         try {
+            angle = Integer.parseInt(rotationString);
             mMuxer.setOrientationHint(Integer.parseInt(rotationString));
         } catch (NumberFormatException e) {
             // skip
@@ -152,6 +154,13 @@ public class MediaTranscoderEngine {
     private void setupTrackTranscoders(MediaFormatStrategy formatStrategy) {
         MediaExtractorUtils.TrackResult trackResult = MediaExtractorUtils.getFirstVideoAndAudioTrack(mExtractor);
         MediaFormat videoOutputFormat = formatStrategy.createVideoOutputFormat(trackResult.mVideoTrackFormat);
+        if(angle == 90 || angle == -90){
+            int outWidth = videoOutputFormat.getInteger(MediaFormat.KEY_WIDTH);
+            int outHeight = videoOutputFormat.getInteger(MediaFormat.KEY_HEIGHT);
+            videoOutputFormat.setInteger(MediaFormat.KEY_WIDTH, outHeight);
+            videoOutputFormat.setInteger(MediaFormat.KEY_HEIGHT, outWidth);
+        }
+        
         MediaFormat audioOutputFormat = formatStrategy.createAudioOutputFormat(trackResult.mAudioTrackFormat);
         if (videoOutputFormat == null && audioOutputFormat == null) {
             throw new InvalidOutputFormatException("MediaFormatStrategy returned pass-through for both video and audio. No transcoding is necessary.");
