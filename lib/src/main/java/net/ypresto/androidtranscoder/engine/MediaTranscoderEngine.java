@@ -154,7 +154,7 @@ public class MediaTranscoderEngine {
     private void setupTrackTranscoders(MediaFormatStrategy formatStrategy) {
         MediaExtractorUtils.TrackResult trackResult = MediaExtractorUtils.getFirstVideoAndAudioTrack(mExtractor);
         MediaFormat videoOutputFormat = formatStrategy.createVideoOutputFormat(trackResult.mVideoTrackFormat);
-        if(angle == 90 || angle == -90){
+        if(angle == 90 || angle == 270){
             int outWidth = videoOutputFormat.getInteger(MediaFormat.KEY_WIDTH);
             int outHeight = videoOutputFormat.getInteger(MediaFormat.KEY_HEIGHT);
             videoOutputFormat.setInteger(MediaFormat.KEY_WIDTH, outHeight);
