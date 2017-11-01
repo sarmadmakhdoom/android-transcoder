@@ -134,7 +134,8 @@ public class MediaTranscoderEngine {
         String rotationString = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
         try {
             angle = Integer.parseInt(rotationString);
-            mMuxer.setOrientationHint(Integer.parseInt(rotationString));
+            // mMuxer.setOrientationHint(Integer.parseInt(rotationString));
+            mMuxer.setOrientationHint(0);
         } catch (NumberFormatException e) {
             // skip
         }
